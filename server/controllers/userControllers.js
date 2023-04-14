@@ -31,6 +31,7 @@ const createUser = async (req, res) => {
   const { name, userId, email, password } = req.body;
 
   // checking the fields
+  
 
   if (!name || !userId || !email || !password) {
     res.status(400);
