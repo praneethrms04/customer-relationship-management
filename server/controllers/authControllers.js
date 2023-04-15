@@ -11,17 +11,6 @@ const { userTypes, UserStatus } = require("../utils/constants");
 const signup = asyncHandler(async (req, res) => {
   const { name, userId, email, password } = req.body;
 
-  if (!name || !email || !userId || !password) {
-    res.status(400);
-    throw new Error("All fields are mandatory");
-  }
-
-  let userAvailable = await User.findOne({ userId });
-  if (userAvailable) {
-    res.status(400);
-    throw new Error("UserId already exists");
-  }
-
   let userStatus = req.body.UserStatus;
   let userType = req.body.userType;
 
@@ -40,6 +29,7 @@ const signup = asyncHandler(async (req, res) => {
     userStatus,
     password: hashPassword,
   });
+
   if (user) {
     res.status(201).json(user);
   } else {
@@ -61,6 +51,10 @@ const login = asyncHandler(async (req, res) => {
 
   let user = await User.findOne({ userId });
 
+  if (user.userId.toString() !== req.body.userId) {
+    res.status(400);
+    throw new Error("UserId does not exist");
+  }
   // console.log(user);
   if (user.userStatus !== "APPROVED") {
     res.status(200).json({
