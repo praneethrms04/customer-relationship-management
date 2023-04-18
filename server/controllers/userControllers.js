@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 
 //@desc get all users
 //@route GET crm/api/v1/users
-//@access public
+//@access private
 
 const getAllUsers = asyncHandler(async (req, res) => {
   const users = await User.find({});
@@ -13,7 +13,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
 //@desc get one user~
 //@route GET crm/api/v1/users/:id
-//@access public
+//@access private
 
 const getUserById = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
@@ -31,12 +31,6 @@ const getUserById = asyncHandler(async (req, res) => {
 const createUser = asyncHandler(async (req, res) => {
   const { name, userId, email, password } = req.body;
 
-  // checking the fields
-  if (!name || !userId || !email || !password) {
-    res.status(400);
-    throw new Error("All fields are Mandatory");
-  }
-
   const hashPassword = await bcrypt.hash(password, 10);
   const user = await User.create({
     name,
@@ -51,4 +45,30 @@ const createUser = asyncHandler(async (req, res) => {
   return res.status(201).send(user);
 });
 
-module.exports = { getAllUsers, getUserById, createUser };
+// @desc put user
+// @route PUT crm/api/v1/users/:id
+// @access private
+
+const updateUser = asyncHandler(async (req, res) => {
+  let updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  res.status(200).json(updatedUser);
+});
+
+// @desc deleteuser
+// @route DELETE crm/api/v1/users/:id
+// @access public
+
+const deleteUser = asyncHandler(async (req, res) => {
+  let deleteUser = await User.deleteOne({ _id: req.params.id });
+  res.status(200).json({ message: "User deleted successful ....!" });
+});
+
+module.exports = {
+  getAllUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+};

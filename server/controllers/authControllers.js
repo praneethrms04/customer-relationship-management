@@ -25,7 +25,7 @@ const signup = asyncHandler(async (req, res) => {
     name,
     userId,
     email,
-    userType,
+    userType: req.userType,
     userStatus,
     password: hashPassword,
   });
@@ -44,10 +44,10 @@ const signup = asyncHandler(async (req, res) => {
 const login = asyncHandler(async (req, res) => {
   const { userId, password } = req.body;
 
-  if (!userId || !password) {
-    res.status(400);
-    throw new Error("All fields are mandatory");
-  }
+  // if (!userId || !password) {
+  //   res.status(400);
+  //   throw new Error("All fields are mandatory");
+  // }
 
   let user = await User.findOne({ userId });
 
