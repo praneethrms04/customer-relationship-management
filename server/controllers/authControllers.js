@@ -9,11 +9,10 @@ const { userTypes, UserStatus } = require("../utils/constants");
 // access public
 
 const signup = asyncHandler(async (req, res) => {
-  const { name, userId, email, password } = req.body;
+  const { name, userId, email, password, } = req.body;
 
   let userStatus = req.body.UserStatus;
-  let userType = req.body.userType;
-
+  let userType = req.body.userType
   if (userType == userTypes.customer) {
     userStatus = UserStatus.approved;
   } else {
@@ -25,7 +24,7 @@ const signup = asyncHandler(async (req, res) => {
     name,
     userId,
     email,
-    userType: req.userType,
+    userTypes : req.body.userType,
     userStatus,
     password: hashPassword,
   });
@@ -74,7 +73,7 @@ const login = asyncHandler(async (req, res) => {
     const accessToken = jwt.sign(
       { id: user.userId },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: 120 }
+      { expiresIn: "15m" }
     );
 
     // console.log(user.userId);

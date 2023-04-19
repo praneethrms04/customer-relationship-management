@@ -1,4 +1,5 @@
 const express = require("express");
+const router = express.Router();
 const {
   getAllUsers,
   getUserById,
@@ -6,7 +7,6 @@ const {
   deleteUser,
 } = require("../controllers/userControllers");
 const { verifyToken, isAdmin } = require("../middleware/authJwt");
-const router = express.Router();
 
 // router.route("/").get(getAllUsers);
 

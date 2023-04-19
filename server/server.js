@@ -13,8 +13,10 @@ app.get("/", (req, res) => {
 
 app.use(express.json())
 
+
 app.use("/crm/api/v1/users", require("./routes/userRoutes"));
 app.use("/crm/api/v1/auth", require("./routes/authRoutes"))
+app.use("/crm/api/v1/tickets", require("./routes/ticketRoutes"))
 
 app.use(errorHandler)
 
