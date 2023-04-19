@@ -1,14 +1,76 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const { userResponse } = require("../utils/objectConverter");
 
 //@desc get all users
 //@route GET crm/api/v1/users
 //@access private
 
 const getAllUsers = asyncHandler(async (req, res) => {
-  const users = await User.find({});
-  res.status(200).json(users);
+  // filter the users by using username => params
+
+  const userNameReq = req.query.name;
+  const userTypeReq = req.query.userTypes;
+  const userStatusReq = req.query.userStatus;
+
+  let users;
+  if (userNameReq) {
+    try {
+      users = await User.find({
+        name: userNameReq,
+      });
+    } catch (error) {
+      console.error(
+        "error while fetching the user for userName : ",
+        userNameReq
+      );
+      res.status(500);
+      throw new Error("Some internal error occured");
+    }
+  } else if (userTypeReq && userStatusReq) {
+    try {
+      users = await User.find({
+        userTypes: userTypeReq,
+        userStatus: userStatusReq,
+      });
+    } catch (error) {
+      console.error(
+        `error while fetching the user for userType [${userTypeReq}] and userStatus [${userStatusReq}]`
+      );
+    }
+  } else if (userTypeReq) {
+    try {
+      users = await User.find({ userTypes: userTypeReq });
+    } catch (error) {
+      console.error(
+        "error while fetching the user for userTypes : ",
+        userTypeReq
+      );
+      res.status(500);
+      throw new Error("Some internal error occured");
+    }
+  } else if (userStatusReq) {
+    try {
+      users = await User.find({ userStatus: userStatusReq });
+    } catch (error) {
+      console.error(
+        "error while fetching the user for userStatus : ",
+        userStatus
+      );
+      res.status(500);
+      throw new Error("Some internal error occured");
+    }
+  } else {
+    try {
+      users = await User.find({});
+    } catch (error) {
+      console.error("error while fetching the user for userStatus");
+      res.status(500);
+      throw new Error("Some internal error occured");
+    }
+  }
+  res.status(200).json(userResponse(users));
 });
 
 //@desc get one user~

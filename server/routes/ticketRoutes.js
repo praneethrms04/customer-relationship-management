@@ -7,8 +7,9 @@ const {
   getTickectbyId,
   updateTicket,
 } = require("../controllers/ticketControllers");
+const { verifyTicketRequest } = require("../middleware/verifyTicketRequest");
 
-router.post("/", [verifyToken], createTicket);
+router.post("/", [verifyToken, verifyTicketRequest], createTicket);
 router.get("/", getTickets);
 router.get("/:id", getTickectbyId);
 router.put("/:id", updateTicket);
